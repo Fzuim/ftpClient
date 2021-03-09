@@ -7,7 +7,9 @@ CMasterCtrl::CMasterCtrl(void) {
 CMasterCtrl::~CMasterCtrl(void) {
 }
 
-void CMasterCtrl::init_startup() {
+void CMasterCtrl::init_startup() 
+{
+	std::locale::global(std::locale(""));
 	TCHAR tszConfigIni[2 * MAX_PATH] = {0};
 	_stprintf_s(tszConfigIni, _T("%s\\Config.ini"), global_config.m_tszCurExePath);
 	
@@ -16,7 +18,8 @@ void CMasterCtrl::init_startup() {
 	msg_callback_obj.Create();
 }
 
-void CMasterCtrl::stop_release() {
+void CMasterCtrl::stop_release()
+{
 	msg_callback_obj.PostThreadMessage(WM_QUIT, NULL, NULL);
 }
 
@@ -85,7 +88,7 @@ int CMasterCtrl::uploadFile(const char* host, int port, const char* username, co
 				SetFilePointerEx(hSrcFile, li, NULL, FILE_BEGIN);
 
 				CLogModule::Odprintf(_T("[%s]SetFilePointerEx=%d"), __FUNCTIONW__, remoteSize);
-				CLogModule::Odprintf("[%s]beginUpload=%s", __FUNCTION__, strRemoteFile.c_str());
+				CLogModule::Odprintf("[%s]beginUpload[%s][%s]", __FUNCTION__, localSize, strRemoteFile.c_str());
 				// 开始执行上传
 				std::ostream& ostr = uploadSession->beginUpload(strRemoteFile);
 				Poco::Buffer<char> buffer(8192);
@@ -203,7 +206,7 @@ int CMasterCtrl::downloadFile(const char* host, int port, const char* username, 
 				else localSize = 0;
 			}else localSize = 0;
 		
-			CLogModule::Odprintf("[%s]beginDownload=%s", __FUNCTION__, remote_file);
+			CLogModule::Odprintf("[%s]beginDownload[%s][%s]", __FUNCTION__, remote_file, local_file);
 			std::istream& istr = downloadSession->beginDownload(remote_file);
 			std::ofstream outFile(local_file, dwWriteType);
 
